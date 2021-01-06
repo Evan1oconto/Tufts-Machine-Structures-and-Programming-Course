@@ -1,0 +1,43 @@
+.temps r6, r7
+.zero r0
+
+.section init
+        .data most_neg 4
+        most_neg := -2147483648
+
+.section text
+        printd:
+            push r1 on stack r2
+            r4 := m[r0][r2 + 1]
+            if (r4 == 0) goto print_zero
+            if (r4 == most_neg) goto print_mostneg using r1
+            if (r4 <s 0) goto print_pos using r5, r1
+            if (r4 >s 0) goto print_neg using r5
+        print_neg:
+            output '-'
+        print_pos:
+            r5 := 0
+            goto print_dec
+        print_mostneg:
+            output "-2147483648"
+            goto finish_printd
+        print_zero:
+            output "00"
+        finish_printd:
+            output '\n'
+            pop r5 off stack r2
+            r1 := 0
+            goto r5
+        print_dec:
+            push r4 on stack r2
+            if (r4 <s 10) goto base_case using r1
+            r5 := r5 + 1
+            r4 := r4 / 10
+            goto print_dec
+        base_case:
+            pop r4 off stack r2
+            r4 := r4 mod 10
+            output r4
+            if (r5 == 0) goto finish_printd #using r4
+            r5 := r5 - 1  #using r4
+            goto base_case

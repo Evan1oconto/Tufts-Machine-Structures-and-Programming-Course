@@ -1,0 +1,5 @@
+macro neg
+loadval rt,0
+com rt,rt
+mult p1,p2,rt
+mend

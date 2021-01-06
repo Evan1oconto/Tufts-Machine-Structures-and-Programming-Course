@@ -1,0 +1,269 @@
+ ------------------------------------------------------------------------
+ |                              README                                  |
+ |**********************************************************************|
+ |      Assignment: Locality and the costs of loads and stores          |
+ |      Date: 10/10/2020                                                |
+ |      By: Ankur Dahal (adahal01) and Evan Loconto (elocon01)          |
+ |______________________________________________________________________|
+
+Help received:
+We asked the TAs about the testing procedures, along with asking several 
+questions on piazza regarding the use of methods in hanson's data structures
+and other questions related to the homework specification.
+We also browsed stackoverflow to fix common bugs regarding string manipulation.
+
+Implementation:
+All the programs (uarray2b, a2plain, and ppmtrans) have been implemented 
+successfully to our knowledge. Additionally, the extra credit portion for 
+ppmtrans (flip horizontal, flip vertical and transpose) have also been 
+implemented.
+
+Hours worked on the assignment:
+We worked approximately 20 hours on the homework assignment, which includes 
+coming up with the design, lab 4, the implementation as well as testing and 
+collecting the experimental data.
+
+
+
+Architecture of our solutions:
+To represent a blocked 2 dimensional unboxed array, a UArray2_T was used, each 
+of whose elements represent a single "block". Each such block is represented by
+a one dimensional unboxed array (UArray_T), which guarantees that the cells in 
+the array are in contiguous memory locations. This architecture guarantees the
+blocked representation of the 2 dimensional array with the invariant that 
+every cell within a single block are stored in an array, which guarantees that 
+they are in contiguous memory locations.
+
+To create the necessary transformations (rotations, flips, and transpose), a 
+separate interface was created in order to modularize the functions needed for
+each image transformation. The methods from A2methods were used in order to
+correctly transform the ppm images. The use of the function pointers in the 
+struct enabled run-time polymorphism, so the image stored in either a 
+UArray2 or a blocked UArray2b could be rotated using the same methods suite.
+
+
+
+Measured performance for Part E:
+
+Machine used for all the tests:   Halligan (homework.cs.tufts.edu) server
+Model name, CPU type, clock rate: Intel(R) Xeon(R) Silver 4214Y CPU @ 2.20GHz
+
+Note: all the measured time are in nanoseconds. The assumption made 
+while calculating the instructions per input pixel rotated is that the 
+machine executes approximately 1 billion instructions in 1 second, i.e, 
+1 instruction every nanosecond.
+
+
+Results:
+
+Image:      flowers.jpg (scale 13)
+Image size: 189480 kilobytes 
+------------------------------------------------------------------------------
+Transformations  |  Row-major      |        Col-major      |    Block-Major|
+------------------------------------------------------------------------------
+90 degrees       |                 |                        |                |
+        CPU Time:|   6846061183    |     6945562481         |   7897036899   | 
+      Pixel Time:|       108       |         110            |      125       |
+instructions per:|       108       |         110            |      125       |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+180 degrees      |                 |                        |                | 
+       CPU Time: |    4201868740   |     9449717444         |    8123071396  |
+     Pixel Time: |        67       |        150             |       129      |
+instructions per:|        67       |        150             |       129      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+270 degrees rot  |                 |                        |                |
+       CPU Time: |    6797456661   |      6862166352        |    8053520419  |
+     Pixel Time: |        108      |        109             |        128     |
+instructions per:|        108      |        109             |        128     |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+flip horizontal  |                 |                        |                |
+       CPU Time: |   3910075545    |       9185226938       |    7436920294  |
+     Pixel Time: |       62        |          145           |       118      |
+instructions per:|       62        |          145           |       118      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+flip vertical    |                 |                        |                | 
+       CPU Time: |    3800261523   |       8396026271       |    7380072289  |
+     Pixel Time: |        60       |           133          |       117      |
+instructions per:|        60       |           133          |       117      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+transpose        |                 |                        |                |
+       CPU Time: |   6528336068    |      6710100767        |    7505999279  |
+     Pixel Time: |       103       |         106            |        119     |
+instructions per:|       103       |         106            |        119     |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+
+
+
+
+
+Image:      flowers.jpg (scale 10)
+Image size: 112118 kilobytes
+------------------------------------------------------------------------------
+Transformations |  Row-major       |        Col-major       |     Block-Major|
+------------------------------------------------------------------------------
+90 degrees rot   |                 |                        |                |
+       CPU Time: |   4019628417    |     4150246992         |   4637916914   | 
+     Pixel Time: |       108       |         111            |       124      |
+instructions per:|       108       |         111            |       124      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+180 degrees rot  |                 |                        |                | 
+       CPU Time: |    2501269572   |        5401973840      |   5004261665   |
+     Pixel Time: |       67        |           145          |      134       |
+instructions per:|       67        |           145          |      134       |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+270 degrees rot  |                 |                        |                |
+       CPU Time: |     3951728767  |       4087197618       |   4808416091   |
+     Pixel Time: |       106       |           109          |      129       |
+instructions per:|       106       |           109          |      129       |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+flip horizontal  |                 |                        |                |
+       CPU Time: |    2274457212   |       5205334108       |   4317556974   |
+     Pixel Time: |       61        |          139           |      116       |
+instructions per:|       61        |          139           |      116       |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+flip vertical    |                 |                        |                | 
+       CPU Time: |    2254857142   |       4698415977       |    4402976921  |
+     Pixel Time: |       60        |          126           |       118      |
+instructions per:|       60        |          126           |       118      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+transpose        |                 |                        |                |
+       CPU Time: |   3857971239    |       4163339361       |   4443343458   |
+     Pixel Time: |    103          |          111           |      119       |
+instructions per:|    103          |          111           |      119       |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+
+
+
+ 
+
+Image:      segfault.jpg (scale 9)
+Image size: 199657 kilobytes
+------------------------------------------------------------------------------
+Transformations |  Row-major       |        Col-major       |     Block-Major|
+------------------------------------------------------------------------------
+90 degrees rot   |                 |                        |                |
+       CPU Time: |  7410685106     |      7331578287        |    8281422197  | 
+     Pixel Time: |      111        |          110           |       124      |
+instructions per:|      111        |          110           |       124      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+180 degrees rot  |                 |                        |                | 
+       CPU Time: |  4453108792     |         9975541316     |     8867751000 |
+     Pixel Time: |     67          |          150           |       133      |
+instructions per:|     67          |          150           |       133      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+270 degrees rot  |                 |                        |                |
+       CPU Time: |   7708586743    |      7376130105        |   8553739896   |
+     Pixel Time: |        116      |          111           |       129      |
+instructions per:|        116      |          111           |       129      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+flip horizontal  |                 |                        |                |
+       CPU Time: |   4066231521    |       9500483948       |    7674546914  |
+     Pixel Time: |       61        |         143            |       115      |
+instructions per:|       61        |         143            |       115      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+flip vertical    |                 |                        |                | 
+       CPU Time: |   3989617641    |        9377611599      |   7796006442   |
+     Pixel Time: |       60        |           141          |      117       |
+instructions per:|       60        |           141          |      117       |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+transpose        |                 |                        |                |
+       CPU Time: |    7057433957   |        7240911512      |    7759309238  |
+     Pixel Time: |       106       |           109          |       117      |
+instructions per:|       106       |           109          |       117      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+
+
+
+
+Image:      mobo.jpg
+Image size: 6778 kilobytes
+------------------------------------------------------------------------------
+Transformations |  Row-major       |        Col-major       |     Block-Major|
+------------------------------------------------------------------------------
+90 degrees rot   |                 |                        |                |
+       CPU Time: |  5443911191     |       5826419188       |   6370044159   | 
+     Pixel Time: |      109        |          117           |      128       |
+instructions per:|      109        |          117           |      128       |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+180 degrees rot  |                 |                        |                | 
+       CPU Time: |    3338113291   |       7377157862       |   6385897214   |
+     Pixel Time: |        67       |          148           |      128       |
+instructions per:|        67       |          148           |      128       |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+270 degrees rot  |                 |                        |                |
+       CPU Time: |   5387130845    |       5828344478       |    6413157497  |
+     Pixel Time: |     108         |           117          |       128      |
+instructions per:|     108         |           117          |       128      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+flip horizontal  |                 |                        |                |
+       CPU Time: |    3051732791   |       7239256872       |    5746973008  |
+     Pixel Time: |      61         |          145           |       115      |
+instructions per:|      61         |          145           |       115      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+flip vertical    |                 |                        |                | 
+       CPU Time: |    2979070031   |      6495802986        |   5867071855   |
+     Pixel Time: |       60        |          130           |       117      |
+instructions per:|       60        |          130           |       117      |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+transpose        |                 |                        |                |
+       CPU Time: |    5336287050   |       5674721681       |   5906987976   |
+     Pixel Time: |        107      |          114           |      118       |
+instructions per:|        107      |          114           |      118       |
+input pixel rot. |                 |                        |                |
+-----------------|------------------------------------------------------------
+
+Explanation:
+When analyzing the time taken to transform the same image of different sizes
+(flowers.jpg scale 10 vs scale 13), our results show that the number 
+of instructions executed per input pixel rotated are very similar, as expected.
+Not only for same images of different sizes, our results show that the 
+time taken to rotate a pixel are similar for all of the images regardless 
+of their size.
+
+Based on the data, our prediction was just about consistent with the 
+obtained results.
+
+Firstly, as predicted last week, 180 degrees rotation 
+with row major is significantly faster than column major or block major 
+for all the images experimented on, as the spatial locality while 180 
+degrees rotation is done is maximized when using row major order. Likewise, 
+for 180 degrees rotation, column major shows the worst performance (as 
+expected) as the spatial locality is exploited the least in this case. Along 
+with this, block major rotation was the consistent mapping function, being the 
+medium between row major and column major for all transformations. 
+
+One fallacy in our prediction was the assumption that block rotation of 90 
+degrees and 180 degrees would be the same value. While they are very close, 
+there is a slight trend with the 90 degree rotation being slightly faster. 
+Whether this is significant or not cannot be determined with our sample size 
+of data. However, disregarding this, block major performed consistently 
+for all the transformations because the locality is pretty much same 
+for all transformations.
+
+
+Also, our results show that for 90 degrees rotation, both column major and 
+row major performed equally because spatial locality is not exploited well 
+enough neither in source nor in the destination image.

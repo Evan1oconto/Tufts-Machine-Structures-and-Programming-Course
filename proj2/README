@@ -1,0 +1,32 @@
+ ------------------------------------------------------------------------
+ |                              README                                  |
+ |**********************************************************************|
+ |      Assignment: iii                                                 |
+ |      Date: 09/28/2020                                                |
+ |      By: Ankur Dahal (adahal01) and Evan Loconto (elocon01)          |
+ |______________________________________________________________________|
+
+Help received:
+We asked the TAs about the pbm format, along with asking several 
+questions on piazza regarding the use of methods in Bit vector and 
+UArray interface.
+
+
+Implementation:
+sudoku, uarray2, bit2, and unblackedges have all been implemented 
+successfully to our knowledge. 
+The UArray2 and Bit2 interfaces replicate
+the functionality of Hanson's UArray and Bit interfaces, and are heavily 
+dependent on Hanson's interfaces. Moreover, in sudoku, we used our 
+UArray2 interface to store the pixel intensities and used one dimensional 
+UArray to check for duplicates whereas in unblackedges, we used 
+Bit2 interface to store the pixel intensities and change the black edge 
+pixels to white. We used a simple breadth first search algorithm (bfs) to 
+find the black edge pixels in unblackedges by making use of a queue data 
+structure (Hanson's Sequence).
+
+
+
+Hours worked on the assignment:
+We worked approximately 14 hours on the homework assignment, which includes 
+coming up with the design, lab 2, the implementation as well as testing.

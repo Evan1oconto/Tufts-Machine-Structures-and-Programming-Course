@@ -1,0 +1,48 @@
+Rotation type: clockwise 90 degrees 
+Dimensions of image (wxh): (10608x5954)
+Number of pixels: 63160032
+Total time taken: 6945562481 nanoseconds (6.94556 seconds)
+Time taken per pixel: 110 nanoseconds
+
+
+
+Rotation type: 180 degrees 
+Dimensions of image (wxh): (10608x5954)
+Number of pixels: 63160032
+Total time taken: 9449717444 nanoseconds (9.44972 seconds)
+Time taken per pixel: 150 nanoseconds
+
+
+
+Rotation type: clockwise 270 degrees 
+Dimensions of image (wxh): (10608x5954)
+Number of pixels: 63160032
+Total time taken: 6862166352 nanoseconds (6.86217 seconds)
+Time taken per pixel: 109 nanoseconds
+
+
+
+Rotation type: flip horizontal 
+Dimensions of image (wxh): (10608x5954)
+Number of pixels: 63160032
+Total time taken: 9185226938 nanoseconds (9.18523 seconds)
+Time taken per pixel: 145 nanoseconds
+
+
+
+Rotation type: flip vertical 
+Dimensions of image (wxh): (10608x5954)
+Number of pixels: 63160032
+Total time taken: 8396026271 nanoseconds (8.39603 seconds)
+Time taken per pixel: 133 nanoseconds
+
+
+
+Rotation type: transpose 
+Dimensions of image (wxh): (10608x5954)
+Number of pixels: 63160032
+Total time taken: 6710100767 nanoseconds (6.71010 seconds)
+Time taken per pixel: 106 nanoseconds
+
+
+

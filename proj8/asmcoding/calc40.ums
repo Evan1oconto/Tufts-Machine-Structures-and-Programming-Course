@@ -1,0 +1,34 @@
+# contains calculator-related data structures and functions #
+
+.temps r6, r7
+.zero r0
+
+.section rodata
+        .space 256
+        jumptable:
+        
+
+.section init
+        r4 := jumptable + 1
+        
+        
+        jumptable_loop:
+                m[r0][r4] := input_error  
+                r4 := r4 + 1
+                if (r4 != 256) goto jumptable_loop using r5
+                
+        #jumptable_init
+                #m[r0][r4+r6]
+        
+        input_error:
+                output "Unknown character "
+                output r4 
+                output '\n'
+                # goto waiting
+               
+.section text
+        calc40:
+                push r1 on stack r2
+                output "Hello World!\n"
+                pop r1 off stack r2
+                goto r1

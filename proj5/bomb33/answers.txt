@@ -1,0 +1,43 @@
+The franchise and the virus work on the same principle: what thrives in one place will thrive in another.
+
+5 10 15 20 25 30
+
+2 120
+
+21 Hiro_Protagonist
+
+ravens
+becdka
+
+435, 456, 470, 538, 539
+
+
+jmp [RAX*8 + 0x401d20]
+
+935, 871, 710, 594, 539
+
+
+196, 239, 435, 353, 500
+
+0x6034e0: user input
+0x6034f0: 935
+0x603500: 594
+0x603510: 196
+0x603520: 239
+0x603530: 435
+0x603540: 871
+0x603550: 353
+0x603560: 539
+0x603570: 710
+
+                        36
+                        /  \
+                       /     \
+                      8      45   
+                     / \      / \       
+                    1  22    40 50
+                      /  \     / \
+                     20  35   99  107 
+                                     \
+                                      1001
+                     

@@ -1,0 +1,11 @@
+add.um
+cmove.um
+halt-verbose.um
+input.um
+load_prog.um
+load_val.um
+mult_test.um
+nand.um
+print-six.um
+seg_load_store_test.um
+unmap_seg.um

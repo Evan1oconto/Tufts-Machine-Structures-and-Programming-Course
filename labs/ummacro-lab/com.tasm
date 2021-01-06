@@ -1,0 +1,3 @@
+macro com
+nand p1,p2,p2
+mend

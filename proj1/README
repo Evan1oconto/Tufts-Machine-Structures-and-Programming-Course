@@ -1,0 +1,22 @@
+ ------------------------------------------------------------------------
+ |                              README                                  |
+ |**********************************************************************|
+ |      Assignment: Filesnpix                                           |
+ |      Date: 09/18/2020                                                |
+ |      By: Ankur Dahal (adahal01) and Evan Loconto (elocon01)          |
+ |______________________________________________________________________|
+
+Help received:
+We asked the TAs about the testing procedures, along with asking several 
+questions on piazza regarding the use of methods in hanson's data structures
+and other questions related to the homework specification.
+We also browsed stackoverflow to fix common bugs regarding string manipulation.
+
+Implementation:
+Brightness, readaline, and simlines have all been implemented successfully 
+to our knowledge, including readaline being able to handle lines longer than
+200 characters.
+
+Hours worked on the assignment:
+We worked approximately 18 hours on the homework assignment, which includes 
+coming up with the design, lab 1, the implementation as well as testing.

@@ -1,0 +1,29 @@
+image=$1
+type=("-row-major" "-col-major" "-block-major")
+allRotations=("-rotate 90" "-rotate 180" "-rotate 270" "-flip horizontal" "-flip vertical" "-transpose")
+echo "Starting....."
+
+
+
+# create directory to store the results 
+directory="data/$image-large-data/"
+mkdir -p "$directory"
+
+
+
+for ((i = 0; i < ${#type[@]}; i++))
+do
+        output_file="$directory/transform${type[$i]}.txt"
+        for ((j = 0; j < ${#allRotations[@]}; j++))
+        do
+                echo "Transformation: ${allRotations[$j]} using ${type[$i]}"
+                djpeg /comp/40/bin/images/large/$image | ./ppmtrans ${type[$i]} ${allRotations[$j]} -time $output_file > /dev/null
+                echo "Done!"
+        done
+done
+
+
+echo "All transformations complete!" 
+echo "Results are saved in the text files in $directory"
+echo "Thanks for using Ankur's script. ^_^"
+echo "Have a good day!"

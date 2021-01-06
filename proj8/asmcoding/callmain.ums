@@ -1,0 +1,11 @@
+# makes the initial call to main, then halts (all in the init section). Not   #
+# counting blank lines or comments, the implementation of this module is only #
+# 5 lines of assembly code.                                                   #
+
+.temps r6, r7
+.zero r0
+
+.section init
+        main:
+            goto calc40 linking r1
+            halt

@@ -1,0 +1,32 @@
+EXPERIMENTAL DATA: PART E
+Format:
+
+CPU make, model and clock rate: 
+
+- image name: 
+- original image size:   scale:
+- cpu time, cpu time per pixel:
+- num. instructions executed per rotated pixel: 
+(estimation: computers execute approximately 1,000,000,000 instructions per second)
+
+- for each image transformation, do the following:
+WRITE THE SCALE FOR EACH IMAGE 
+1. -row-major:
+        i. all rotations (90, 180, 270) in order
+        ii. flip (horizontal then vertical)
+        iii. transpose
+        iv. store all the data in the given order in <imagename_row_major_scale.txt>
+
+2. -col-major:
+        i. all rotations (90, 180, 270) in order
+        ii. flip (horizontal then vertical)
+        iii. transpose
+        iv. store all the data in the given order in <imagename_col_major_scale.txt>
+
+3. -block-major:
+        i. all rotations (90, 180, 270) in order
+        ii. flip (horizontal then vertical)
+        iii. transpose
+        iv. store all the data in the given order in <imagename_block_major_scale.txt>
+
+ djpeg /comp/40/bin/images/from-wind-cave.jpg | pnmscale 10 | ./ppmtrans -col-major -rotate 90 -time partE_data/from_wind_cave_jpg_col_major_10.txt > /dev/null &&  djpeg /comp/40/bin/images/from-wind-cave.jpg | pnmscale 10 | ./ppmtrans -col-major -rotate 180 -time partE_data/from_wind_cave_jpg_col_major_10.txt > /dev/null &&  djpeg /comp/40/bin/images/from-wind-cave.jpg | pnmscale 10 | ./ppmtrans -col-major -rotate 270 -time partE_data/from_wind_cave_jpg_col_major_10.txt > /dev/null &&  djpeg /comp/40/bin/images/from-wind-cave.jpg | pnmscale 10 | ./ppmtrans -col-major -flip horizontal -time partE_data/from_wind_cave_jpg_col_major_10.txt > /dev/null &&  djpeg /comp/40/bin/images/from-wind-cave.jpg | pnmscale 10 | ./ppmtrans -col-major -flip vertical -time partE_data/from_wind_cave_jpg_col_major_10.txt > /dev/null &&  djpeg /comp/40/bin/images/from-wind-cave.jpg | pnmscale 10 | ./ppmtrans -col-major -transpose -time partE_data/from_wind_cave_jpg_col_major_10.txt > /dev/null 

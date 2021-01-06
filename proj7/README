@@ -1,0 +1,22 @@
+Homework 7 of comp40
+
+Duke Alf and Evan Loconto
+(ealf01 and elocon01)
+
+
+Acknowledgment: We met with multiple TA's throughout the assignment
+to discuss our code and bottlenecks. 
+
+
+Assembly code analysis: Our final um executable was significantly quicker than
+our original design. The routine that takes the most time is new_segment(). 
+This function creates a new array to represent a segment. After analyzing the 
+assembly code, we could not find a way to improve this portion of code since
+most of the time is spent on malloc/int_malloc. There is a for loop to 
+initialize the array with zeros, but we could not get rid of this or find 
+another method without inherently changing the structure of our progam. 
+
+
+Time spent:
+analyzing - 2 hours
+solving - 18 hours 

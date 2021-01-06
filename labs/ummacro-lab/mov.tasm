@@ -1,0 +1,5 @@
+macro mov
+nand p2,p2,p2
+nand p1,p2,p2
+nand p2,p2,p2
+mend

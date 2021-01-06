@@ -1,0 +1,19 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "uploadOnSave": true,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "homework.cs.tufts.edu",
+  "port": "22",
+  "target": "COMP40",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "elocon01",
+  "password": "S2pryDgger@",
+  "watch": [],
+  "transport": "scp"
+}

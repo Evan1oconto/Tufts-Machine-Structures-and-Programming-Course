@@ -1,0 +1,243 @@
+Analysis for Bomb Assignment
+comp40 fall 2020
+11/08/2020
+
+
+Overview:
+
+Duke Alf (ealf01) and Evan Loconto (elcon01)
+
+Bomb #33
+
+Help and Collaboration:
+We used the B&O book, AMD and Intel Instruction manual, and the internet to
+break down the assembly code. 
+
+Hours spent: ~20 Hours
+
+
+Defuse: 
+
+The franchise and the virus work on the same principle: what thrives in 
+one place will thrive in another.
+5 10 15 20 25 30
+2 120
+21
+becdka
+500
+
+
+Description:
+
+Phase 1: Reads in a string that must match a predetermined string. 
+
+Phase 2: Reads in six numbers that must be in sequntial order and
+increase by 5. 
+
+Phase 3: Reads in two numbers. The first number must be <= 7 and
+is the index of the switch case. The second number is the value of the switch 
+case and must match with the given first number's case. 
+
+Phase 4: Reads in a number that goes through the recursive Fibonacci
+Sequence. The input number must map to 17711 after the calculation. 
+
+Secret phase: Reads in a number and performs searches in a binary search tree.
+If the number inputted is greater than 1001, the bomb will explode. If the 
+number is less than 1001, then fun7 will be called. Fun7 will search the 
+binary search tree for the inputted value. If it cannot find the value, it
+will return a negative integer which will ultimately explode the bomb. If it 
+finds a value, it will return (2 * fun(input, BST->right) + 1), where fun7 
+returns 0 when the input equals a value. This means the input needs to equal 
+the element 4 levels down towards the right since that value will return
+(2 * 3 + 1) = 7, which is what is looked for in the secret phase function. 
+This value ends up being 1001, as seen in the picture below.
+                         36
+                        /   \
+                       /      \
+                      8       45   
+                     / \      / \       
+                    1  22    40 50
+                      /  \     / \
+                     20  35   99  107 
+                                     \
+                                      1001
+
+
+Code:
+
+/*
+
+ * code.c
+ * Authors:      Duke Alf (ealf01), Evan Loconto (elocon01)
+ * Date:         11/08/2020
+ * Assignment:   Bomb
+
+ * Implementation of phase 5 and 6 for the bomb assignment.
+
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
+        long value;
+        struct node *next;
+} node;
+
+static char *TARGET = "ravens"; 
+static char *PARSER = "isrveawhobpnutfg";
+
+node node_9 = {
+        710,
+        NULL
+};
+
+node node_8 = {
+        539,
+        &node_9 
+};
+
+node node_7 = {
+        353,
+        &node_8 
+};
+
+node node_6 = {
+        871,
+        &node_7 
+};
+
+node node_5 = {
+        435,
+        &node_6 
+};
+
+node node_4 = {
+        239,
+        &node_5 
+};
+
+node node_3 = {
+        196,
+        &node_4 
+};
+
+node node_2 = {
+        594,
+        &node_3
+};
+
+node node_1 = {
+        935,
+        &node_2
+};
+
+
+void phase_5 (char *input);
+void fun6(struct node *root);
+void phase_6(char *input);
+
+
+/* phase_5
+*   Arguments: input string 
+*   Return: none
+*   Description: reads in a string and maps it to another string,
+*                  then checks if this is equal to "ravens"
+*   Assumptions: string length is equal to 6
+*
+*/
+void phase_5 (char *input)
+{
+        int i;
+        int index;
+        int is_equal;
+
+        /* makes sure input is correct string length */
+        if (string_length(input) != 6) {
+                explode_bomb();
+        }
+
+        /* change each character */
+        for (i = 0; i < 6; i++) {
+                int k = (input[i] % 16);
+                
+                input[i] = PARSER[k];
+        }
+
+        is_equal = strings_not_equal(input, TARGET);
+        
+        if (is_equal != 0){
+                explode_bomb();
+        }
+
+        return;
+}
+
+/* fun6
+*   Arguments: root node
+*   Return: none
+*   Description: helper function for phase 6 that attaches a node then 
+*                  uses bubble sort to sort a linked list
+*   Assumptions: root not null
+*
+*/
+void fun6(node *root)
+{
+        if (root == NULL) {
+                return;
+        }
+
+        /* add new node to start of list */
+        root->next = &node_1;
+        
+        node *bubble = root;
+        node *curr = bubble->next;
+        long placehold;
+
+        /* bubble sort */ 
+        while (bubble->next != NULL) {
+                while (curr != NULL) {
+                        if (curr->value > bubble->value) {
+                                placehold = curr->value;
+                                curr->value = bubble->value;
+                                bubble->value = placehold;
+                        }
+                        curr = curr->next;
+                }
+                bubble = bubble->next;
+        }
+
+        return;
+}
+
+/* phase_6
+*   Arguments: input string 
+*   Return: none
+*   Description: reads in a string, converts it to a long, and then creates a
+                 node with the value to be inserted into the linked list. The
+                 new node should be placed in as the 5th value in the list, if
+                 it is not, then it will return false.
+*   Assumptions: an int is being passed in
+*
+*/
+void phase_6(char *input)
+{
+        long in = strtol(input, NULL, 10);
+        
+        node node_0;
+        node_0.value = in;
+
+        /* call helper to sort list */ 
+        fun6(&node_0);
+
+        node *curr = &node_0;
+
+        /* check that inputted node is now the fifth node in linked list */
+        int node_check = (curr->next->next->next->next->value);
+
+        if (node_check != in){
+                explode_bomb();
+        }
+
+        return;
+}

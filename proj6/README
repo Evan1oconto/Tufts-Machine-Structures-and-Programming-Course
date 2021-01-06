@@ -1,0 +1,112 @@
+Duke Alf and Evan Loconto
+(ealf01 and elocon01)
+
+We recieved help from multiple TA's throughout the assignment.
+
+We believe all aspects of our universal machine have been correctly 
+implemented. 
+
+Design: We essentially stuck to our design plan. 
+
+Modules:
+um - This is where main is located. um opens and file and calls intialize
+to set up memory and execute to use the codewords. It uses the handler and
+execute modules and hides how the memory and words are implemented. 
+
+handler - handler is in charge of memory. We represent memory through a 
+sequence of sequences using Hanson. We have struct that holds the Sequence 
+for memory, a Stack for unmapping, and the counter. handler initializes 
+memory by setting it up and reading the file into memory. It also deals 
+with appending and deleting segments in the memory. 
+
+segment - segment handles all segments of memory which are Hanson Sequences. 
+Its functionalities include extracting words from segments, adding words to 
+segments, and duplicating segments. Segment hides how the codewords are 
+stored as uint32_t's in the Sequence. 
+
+execute - execute decodes the words from the segment and contains the 
+14 operations. It uses bitpack to decode each word and execute it properly.
+execute uses handler and segment modules to deal with memory and segments 
+in some of the operations. 
+
+
+Timing:
+Our UM takes 4.29 seconds to execute 50 million instructions. We know 
+that midmark has ~80 million instructions. It takes 6.87 seconds for our 
+program to run midmark.um. Therefore, we can estimate the time to run 50
+million instructions through a simple ratio. 
+
+
+Unit tests:
+halt-verbose.um - further tests the functionality of the halt instruction. 
+If the halt is successful, it will output nothing. If it is not successful, it
+will output BAD! to stdout through the output. NOTE: load_val, output, and halt
+instructions are mutually dependent, so if load_val or output does not work, 
+halt would still be correct since no output is expected. 
+
+load_val.um - tests the functionality of the load value instruction, along
+with the output instruction. It loads the characters G, o, o, d, and \n and
+outputs it using the output command. If the test is successful, it prints out
+Good\n (where the \n is a new line) and if it does not print out the output, 
+the test was unsuccessful, indicating either load value or output was wrong.
+
+add.um - tests the add instruction. It does this by loading specific values in
+the registers and adding them together and then outputs them. If the test is 
+successful, it will output the string ;iqSlo\n (where the \n is a new line), 
+and if it does not, it indicates there is an issue in the add function. 
+
+cmove.um - tests the move instruction. It does this by loading specific values
+in registers 1 and 2, but loads 0 into register 3. It then tests to see if 
+the value in the register 2 is moved to register 1 (which it should not since
+register 3 is 0.) and then outputs register 1. It will then set register 3 to 
+a non-zero value and tries the same move function. This time it should change 
+the value in register 1. At the end, the expected output is cd\n (where the \n
+is a new line).
+
+load_prog.um - tests the load program instruction. It does this by loading 0
+into register 0, 50 into register 1, and 5 into register 5. It will then load
+the program at the 0th segment, but change the counter. The new counter starts
+at a halt command, which should result in the test outputting nothing. If this
+did not work, the expected output would have been 2. 
+
+mult_test.um - tests the multiplication instruction. It does this by loading 
+specific values in the registers and adding them together and then outputs
+them. If the test is successful, it will output the string cilldT\n (where the
+\n is a new line), and if it does not, it indicates there is an issue in the 
+mult function. 
+
+nand.um - tests the nand instruction. It does this by loading specific values 
+in the registers and nanding them together and then outputs them. If the test 
+is successful, it will output the string @\n (where the \n is a new line), and
+if it does not, it indicates there is an issue in the nand function. 
+
+print-six.um - also tests the functionality of the add function. It's expected
+output is H\n (where the \n is a new line), and if it does not, it indicates 
+there is an issue in the add function.
+
+
+seg_load_store_test.um - tests the functionality of load segment and store 
+segment operations. It does this by mapping a new segment and storing
+23456789:; into separate codewords in the new segment. Then it, loads the 
+segment and outputs 23456789:;\n (where the \n is a new line). If it does not 
+do this, there is an error in either the storing or loading functions
+
+
+unmap_seg.um - tests the functionality of the unmap segment operation. It does
+this by mapping 9 new segments that hold the value A. It then unmaps the first
+8 of the new segments, and then remaps them to hold the value 2. It then prints
+out the last segment's value and one of the newly mapped segments in order to
+check functionality of the unmap segment. The output should be equal to A2\n
+(where the \n is a new line) and if this is not the case, something is wrong
+with the unmap function.
+
+input.um - tests the functionality of the input  operation. It does
+this by mapping a new segment that is populated with user input.
+It then prints out the inputted stuff. Using pre-inputted stuff, it should 
+print out abcdefghij\n (where the \n is a new line) and if this is not the 
+case, something is wrong with the input function.
+
+Time spent:
+analyzing - 2 hours
+designing - 6 hours
+solving - 28 hours 

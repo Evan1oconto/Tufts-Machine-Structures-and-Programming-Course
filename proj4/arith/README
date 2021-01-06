@@ -1,0 +1,46 @@
+Edward Alf and Evan Loconto
+ealf01 and elocon01
+
+HW4 README - arith
+
+10/26/2020
+
+
+Acknowledgements:
+We met with multiple TA's about designing the program and finding bugs in
+our implementation.
+
+Architecture:
+  Part A: Our solution is divided into the compress and decompress modules.
+  The client specifies the compression or decompression through the 40image
+  interface. This calls the respective compress40 or decompress40 algorithm in
+  compress40.c.
+
+  structures.h: Contains all the structures used in the
+  program: Component(Y, Pb, PR), unpacked_word(a, b, c, d, pb, pr), and a
+  closure struct. All the constants are defined here. 
+
+  compress.c:
+  This file contains all the respective functions to implement the compress
+  algorithm such as converting from RBG to Component form, computing the
+  necessary conversions, and packing the word.
+
+  decompress.c:
+  This file contains the reciprocal functions of compress that allow an image
+  to be decompressed. After reading in codewords, the codewords are unpacked
+  so they can be converted into Component form then to RGB form.
+
+  Part B:
+    bitpack.c: Contains the functions used in Part A to pack and unpack
+    codewords.
+
+What has been correctly implemented:
+We believe all aspects of the program have been correctly implemented. After
+running multiple images through compress and back through decompress, we
+obtained ppmdiff values consistently under 0.1.
+
+Time spent analyzing:
+~10 hours
+
+Time spent solving:
+~27 hours
