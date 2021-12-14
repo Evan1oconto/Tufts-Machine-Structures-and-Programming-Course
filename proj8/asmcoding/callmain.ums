@@ -1,11 +1,11 @@
-# makes the initial call to main, then halts (all in the init section). Not   #
-# counting blank lines or comments, the implementation of this module is only #
-# 5 lines of assembly code.                                                   #
+// callmain.ums
+// by elocon01, mmorni01, 12/10/20
+// code for main, which calls calc40
 
 .temps r6, r7
 .zero r0
 
-.section init
+// calls procedure main, which calls calc40 and starts the RPNCalc
+.section text
         main:
-            goto calc40 linking r1
-            halt
+            goto calc40

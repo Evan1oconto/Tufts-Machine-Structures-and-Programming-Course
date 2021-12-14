@@ -1,34 +1,335 @@
-# contains calculator-related data structures and functions #
+// calc40.ums
+// by elocon01, mmorni01, 12/10/20
+// primary code for function of RPNCalc
+// code executes based on a two-state state machine, where the code is either
+// *waiting*, expecting a value, or *entering*, when it has recieved a value
+// and is awaiting further values
 
 .temps r6, r7
 .zero r0
 
+// allocates the space for the jumptable
 .section rodata
-        .space 256
         jumptable:
-        
+        .space 256
 
+
+// initializes the entirety of the jumptable
 .section init
-        r4 := jumptable + 1
-        
-        
+        r4 := jumptable
+        goto jumptable_loop
+
+        // first, initializes all jumptable values to input_error. Does this 
+        // using a loop.
         jumptable_loop:
                 m[r0][r4] := input_error  
                 r4 := r4 + 1
-                if (r4 != 256) goto jumptable_loop using r5
+                if (r4 != jumptable + 256) goto jumptable_loop using r5
+                goto jumptable_init
+
+
+        // initializes key values in the jumptable (such as operations/digits).
+        // This sets up the table completely and calls main.
+        jumptable_init:
+                r4 := jumptable
+                m[r0][r4 + '0'] := digit
+                m[r0][r4 + '1'] := digit
+                m[r0][r4 + '2'] := digit
+                m[r0][r4 + '3'] := digit
+                m[r0][r4 + '4'] := digit
+                m[r0][r4 + '5'] := digit
+                m[r0][r4 + '6'] := digit
+                m[r0][r4 + '7'] := digit
+                m[r0][r4 + '8'] := digit
+                m[r0][r4 + '9'] := digit
                 
-        #jumptable_init
-                #m[r0][r4+r6]
-        
-        input_error:
-                output "Unknown character "
-                output r4 
-                output '\n'
-                # goto waiting
-               
+                m[r0][r4 + ' '] := space
+                m[r0][r4 + '\n'] := newline
+                
+                m[r0][r4 + '+'] := plus
+                m[r0][r4 + '-'] := minus
+                m[r0][r4 + '/'] := divide
+                m[r0][r4 + '*'] := mult
+                
+                m[r0][r4 + '|'] := or
+                m[r0][r4 + '&'] := and
+                m[r0][r4 + 'c'] := sign_change
+                m[r0][r4 + '~'] := not
+                
+                m[r0][r4 + 's'] := swap
+                m[r0][r4 + 'd'] := duplicate
+                m[r0][r4 + 'p'] := remove
+                m[r0][r4 + 'z'] := remove_all
+                goto main
+
+
+// This section contains procedures/definitions used to create the basis of the
+// rpn calculator. It handles the operations, digit storing, and calls printd 
+// for the printing aspect of the code.      
 .section text
+        // returns to waiting state
+        space:
+                pop r3 off stack r2
+                goto waiting
+                
+        // prints out value stack and returns to waiting state
+        // if stack is empty, silently returns to waiting state
+        newline:
+                pop r3 off stack r2
+                push r3 on stack r2
+                newline_loop:
+                        if (r3 == valuestack) goto end_newline using r5
+                        push m[r0][r3] on stack r2
+                        output ">>> "
+                        goto printd linking r1
+                        pop stack r2
+                        r3 := r3 + 1
+                        goto newline_loop 
+                end_newline:
+                        pop r3 off stack r2
+                        goto waiting
+                        
+        // signed addition of top two values on value stack
+        // CRE to have zero or one value on stack
+        plus:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_0 using r1
+                pop r5 off stack r3
+                if (r3 == valuestack) goto error_underflow_1 using r1
+                pop r4 off stack r3
+                r4 := r4 + r5
+                push r4 on stack r3
+                goto waiting
+                
+        // signed subtraction of top two values on value stack
+        // CRE to have zero or one value on stack
+        minus:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_0 using r1
+                pop r5 off stack r3
+                if (r3 == valuestack) goto error_underflow_1 using r1
+                pop r4 off stack r3
+                r4 := r4 - r5
+                push r4 on stack r3
+                goto waiting
+                
+        // signed division of top two values on value stack
+        // CRE to have zero or one value on stack, or to divide by 0
+        divide:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_0 using r1
+                pop r5 off stack r3
+                if (r3 == valuestack) goto error_underflow_1 using r1
+                if (r5 == r0) goto error_zero_divide using r1
+                pop r4 off stack r3
+                
+                r1 := 0
+                push r3 on stack r2
+                if (r5 >s r0) goto neg_num using r3
+                        r5 := r5 * -1
+                        r1 := r1 + 1
+                neg_num:
+                        if (r4 >=s r0) goto check_neg using r3
+                        r4 := r4 * -1
+                        r1 := r1 - 1
+                check_neg:
+                        if (r1 != r0) goto neg_division using r3
+                        r4 := r4 / r5
+                        pop r3 off stack r2
+                        push r4 on stack r3
+                        goto waiting
+                neg_division:
+                        r4 := r4 / r5
+                        r4 := r4 * -1
+                        pop r3 off stack r2
+                        push r4 on stack r3
+                        goto waiting
+
+        // signed multiplication of top two values on value stack
+        // CRE to have zero or one value on stack
+        mult:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_0 using r1
+                pop r5 off stack r3
+                if (r3 == valuestack) goto error_underflow_1 using r1
+                pop r4 off stack r3
+                r4 := r4 * r5
+                push r4 on stack r3
+                goto waiting
+
+
+        // bitwise or of top two values on value stack
+        // CRE to have zero or one value on stack                        
+        or:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_0 using r1
+                pop r5 off stack r3
+                if (r3 == valuestack) goto error_underflow_1 using r1
+                pop r4 off stack r3
+                r4 := r4 | r5
+                push r4 on stack r3
+                goto waiting
+                
+        // bitwise and of top two values on value stack
+        // CRE to have zero or one value on stack 
+        and:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_0 using r1
+                pop r5 off stack r3
+                if (r3 == valuestack) goto error_underflow_1 using r1
+                pop r4 off stack r3
+                r4 := r4 & r5
+                push r4 on stack r3
+                goto waiting
+                
+        // makes top value on stack negative
+        // CRE to have empty value stack
+        sign_change:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_2 using r1
+                pop r5 off stack r3
+                r5 := -1 * r5
+                push r5 on stack r3
+                goto waiting
+                
+        // bitwise not of top value on stack
+        // CRE to have empty value stack
+        not:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_2 using r1
+                pop r5 off stack r3
+                r5 := ~r5
+                push r5 on stack r3
+                goto waiting
+
+        // swap will swap the top two values on the valuestack. 
+        // CRE to zero or one value on the value stack
+        swap:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_0 using r1
+                pop r5 off stack r3
+                if (r3 == valuestack) goto error_underflow_1 using r1
+                pop r4 off stack r3
+                push r5 on stack r3
+                push r4 on stack r3
+                goto waiting
+
+                
+        // duplicate will duplicate the top value of the stack and add it onto
+        // the stack. 
+        // CRE to have empty value stack
+        duplicate:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_2 using r5
+                pop r5 off stack r3
+                push r5 on stack r3
+                push r5 on stack r3
+                goto waiting
+
+
+                
+        // remove will pop off the top value of the stack.
+        // CRE to have empty value stack
+        remove:
+                pop r3 off stack r2
+                if (r3 == valuestack) goto error_underflow_2 using r5
+                pop stack r3
+                goto waiting
+
+
+
+        // remove_all will print out and remove all the values on the value
+        // stack and then goes back to waiting stage. 
+        remove_all:
+                pop r3 off stack r2
+                remove_loop:
+                        if (r3 == valuestack) goto waiting using r5
+                        pop stack r3
+                        goto remove_loop
+
+
+        // input_error label: it will print out the necessary error message if
+        // invalid character is given to program. 
+        input_error:
+                pop r3 off stack r2
+                output "Unknown character '"
+                output r4
+                output "'\n"
+                
+        // waiting state - the backbone of the RPNCalc. Waits for stdin input
+        waiting:
+                r4 := input()
+                
+        // continuation of waiting state - handles newly entered character
+        // and goes to relevant slot in jumptable
+        waiting_with_character:
+                push r3 on stack r2
+                if (r4 <s r0) goto halt_program using r3
+                r5 := jumptable + r4
+                r5 := m[r0][r5]
+                goto r5
+        
+        // handles entry of single digit, then transitions to entering state
+        digit:
+                pop r3 off stack r2
+                r4 := r4 - 48
+                push r4 on stack r3
+                
+        // entering state - if another number is seen, combine with current
+        // top of stack. If space or other operator seen, handle accordingly
+        entering:
+                r4 := input()
+                if (r4 <s r0) goto halt_program using r5
+                r5 := 48
+                push r3 on stack r2
+                if (r4 <s r5) goto operator_entered using r3
+                r5 := 57
+                if (r4 >s r5) goto operator_entered using r3
+                pop r3 off stack r2
+                pop r5 off stack r3
+                r5 := r5 * 10
+                r4 := r4 - 48
+                r5 := r5 + r4
+                push r5 on stack r3
+                goto entering
+                
+        // handles entered operator and executes jumptable
+        operator_entered:
+                r5 := jumptable + r4
+                r5 := m[r0][r5]
+                goto r5
+              
+        // driver of RPNCalc. Makes the first call to waiting state
         calc40:
-                push r1 on stack r2
-                output "Hello World!\n"
-                pop r1 off stack r2
-                goto r1
+                goto waiting
+                
+        // ends the program
+        halt_program:
+                halt
+
+        // error_underflow_2 will output an error message if at least two  
+        // elements are expected on the stack
+        error_underflow_0:
+                output "Stack underflow---expected at least 2 elements\n"
+                goto waiting
+
+        // error_underflow_1 will output an error message if at least two 
+        // elements are expected on the value stack. Will push back r5 onto 
+        // value stack as it is initially popped off.
+        error_underflow_1:
+                output "Stack underflow---expected at least 2 elements\n"
+                push r5 on stack r3
+                goto waiting
+
+        // error_underflow_2 will output an error message if at least one  
+        // element is expected on the stack
+        error_underflow_2:
+                output "Stack underflow---expected at least 1 element\n"
+                goto waiting
+
+        // error_divide will output an error message if a divide by zero 
+        // operation is attempted
+        error_zero_divide:
+                output "Division by zero\n"
+                push r5 on stack r3
+                goto waiting

@@ -1,19 +1,21 @@
-# contains startup code to allocate space for the call stack (in the data #
-# section) and initialize both the stack pointer and r0 (in the init section) #
+// urt0.ums
+// by elocon01, mmorni01, 12/10/20
+// contains startup code to allocate space for the call stack (in the data
+// section) and initialize both the stack pointer and r0 (in the init section)
 
 .temps r6, r7
 .zero r0
 
+
+// allocates the space for the endstack and valuestack 
 .section data
         .space 100000
         endstack: 
         .space 100000
         valuestack:
 
+// initializes r2 and r3 as the endstack and valuestack respectively
 .section init
         start:
-        r0 := 0
         r2 := endstack
         r3 := valuestack
-        goto main linking r1
-        halt 
